@@ -20,6 +20,7 @@ async function KSASchoolSupportProgram(browser, page, body, res, plan, personNum
     } = body;
 
     console.log('validating fields of :' + plan);
+    console.log('SS_DIAG_INCOMING:', JSON.stringify({ Fromdate, ToDate, AcademicYear, ClaimType, PaidAmount, Child, SchoolName, ChildGrade }));
 
     // Validate required fields
     const missingFields = [];
@@ -72,6 +73,8 @@ async function KSASchoolSupportProgram(browser, page, body, res, plan, personNum
         await sleep(500);
         await page.keyboard.press('Enter');
         await sleep(3000);
+        const shownDate = await page.$eval(sel, el => el.value).catch(() => 'READ_ERR');
+        console.log('SS_DIAG_DATE evIter=' + iter + ' typed="' + value + '" shown="' + shownDate + '"');
     }
 
     async function fillNumber(iter, value) {
