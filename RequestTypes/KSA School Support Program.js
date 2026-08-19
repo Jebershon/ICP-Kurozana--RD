@@ -16,11 +16,10 @@ async function KSASchoolSupportProgram(browser, page, body, res, plan, personNum
         PaidAmount,
         Child,
         SchoolName,
-        ChildGrade
+        GradeOfChild
     } = body;
 
     console.log('validating fields of :' + plan);
-    console.log('SS_DIAG_INCOMING:', JSON.stringify({ Fromdate, ToDate, AcademicYear, ClaimType, PaidAmount, Child, SchoolName, ChildGrade }));
 
     // Validate required fields
     const missingFields = [];
@@ -31,6 +30,8 @@ async function KSASchoolSupportProgram(browser, page, body, res, plan, personNum
     if (!ClaimType) missingFields.push('ClaimType');
     if (!PaidAmount) missingFields.push('PaidAmount');
     if (!Child) missingFields.push('Child');
+    if (!SchoolName) missingFields.push('SchoolName');
+    if (!GradeOfChild) missingFields.push('GradeOfChild');
     if (missingFields.length > 0) {
         throw new AutomationError('Missing required field(s): ' + missingFields.join(', '), plan, personNumber, RequestID);
     }
@@ -73,8 +74,6 @@ async function KSASchoolSupportProgram(browser, page, body, res, plan, personNum
         await sleep(500);
         await page.keyboard.press('Enter');
         await sleep(3000);
-        const shownDate = await page.$eval(sel, el => el.value).catch(() => 'READ_ERR');
-        console.log('SS_DIAG_DATE evIter=' + iter + ' typed="' + value + '" shown="' + shownDate + '"');
     }
 
     async function fillNumber(iter, value) {
@@ -159,8 +158,8 @@ async function KSASchoolSupportProgram(browser, page, body, res, plan, personNum
         }
 
         // Child Grade (evIter:40) - optional
-        if (exists(ChildGrade)) {
-            await fillText(40, ChildGrade);
+        if (exists(GradeOfChild)) {
+            await fillText(40, GradeOfChild);
         }
     }
 
